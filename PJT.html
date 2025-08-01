@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: url('map.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .tablet {
+      width: 90%;
+      max-width: 1024px;
+      margin: 30px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      color: white;
+      position: relative;
+    }
+    .tablet-body {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+    }
+    .sidebar {
+      width: 30%;
+      background-color: #111;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .profile-circle {
+      background: linear-gradient(135deg, #7f00ff, #00d2ff);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-info small {
+      color: #bbb;
+    }
+    .stats {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .stats div {
+      margin-bottom: 8px;
+    }
+    .fuel { color: #1fd163; }
+    .nav-button {
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+    }
+    .main-panel {
+      width: 70%;
+      padding: 30px;
+      background: linear-gradient(to bottom right, #1f2d3d, #111);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .location-card {
+      background-color: #2c3e50;
+      border-radius: 15px;
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .location-card i {
+      font-size: 40px;
+      color: #3498db;
+    }
+    .info-bar {
+      display: flex;
+      justify-content: space-around;
+      background-color: #000;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .info-bar span {
+      font-weight: bold;
+    }
+    .traffic-light { color: #1fd163; }
+    .footer-home {
+      background-color: #000;
+      text-align: center;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+      cursor: pointer;
+    }
+    .footer-home i {
+      color: #0d6efd;
+      font-size: 24px;
+    }
+    .footer-home span {
+      display: block;
+      font-size: 13px;
+      color: #0d6efd;
+    }
+    .portfolio {
+      display: none;
+      padding: 2rem;
+      animation: slideInLeft 0.5s forwards;
+      background-color: #fff;
+      color: black;
+      overflow-y: auto;
+      height: 100%;
+    }
+    .slide-in-left {
+      animation: slideInLeft 0.5s forwards;
+    }
+    .slide-out-right {
+      animation: slideOutRight 0.5s forwards;
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="tablet">
+      <div class="tablet-body">
+        <div class="sidebar">
+          <div>
+            <div class="profile-circle">JD</div>
+            <div class="mt-2">
+              <strong>한승현</strong><br>
+              <small>SSAFY 14기</small>
+            </div>
+            <div class="stats mt-4">
+              <div>Today's Drive <span class="float-end">45 min</span></div>
+              <div>Distance <span class="float-end">23.5 km</span></div>
+              <div>Fuel Level <span class="float-end fuel">78%</span></div>
+            </div>
+          </div>
+          <button class="nav-button mt-4" id="btn-mypage">
+            <i class="bi bi-person-lines-fill"></i><br>My Page
+          </button>
+        </div>
+
+        <div class="main-panel" id="main-ui">
+          <div>
+            <div class="topbar">
+              <h6>Current Location</h6>
+              <div>
+                <button class="btn btn-primary btn-sm">+</button>
+                <button class="btn btn-secondary btn-sm">–</button>
+              </div>
+            </div>
+            <div class="location-card mt-3">
+              <i class="bi bi-geo-alt-fill"></i>
+              <h4 class="mt-2">Seoul, Gangnam District</h4>
+              <p>Latitude: 37.5665° N</p>
+              <p>Longitude: 126.9780° E</p>
+            </div>
+          </div>
+
+          <div class="info-bar">
+            <div>Current<br><span>Gangnam Station</span></div>
+            <div>Weather<br><span>Sunny 72°F</span></div>
+            <div>Traffic<br><span class="traffic-light">Light</span></div>
+          </div>
+        </div>
+
+        <div class="portfolio w-100" id="portfolio">
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">홍길동</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item"><a class="nav-link" href="#main">Main</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#skill">Skill</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#stack">Stack</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#closing">Closing</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+          <section id="main" class="mt-4">
+            <div class="carousel slide" data-bs-ride="carousel" data-bs-intervel="2000">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="slide1.jpg" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-item">
+                  <img src="slide2.jpg" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-item">
+                  <img src="slide3.jpg" class="d-block w-100" alt="Slide 3">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="about" class="mt-5 p-4 bg-light rounded">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">소개</h4>
+                <img src="https://via.placeholder.com/150" class="rounded-circle mb-3">
+                <p>자기소개 글</p>
+                <ul>
+                  <li>이메일: example@email.com</li>
+                  <li>전화번호: 010-1234-5678</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="skill" class="mt-5 p-4">
+            <h4>Skill</h4>
+            <div class="mb-3">HTML <div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" data-skill="90%" style="width: 0%"></div></div></div>
+            <div class="mb-3">CSS <div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated bg-success" data-skill="80%" style="width: 0%"></div></div></div>
+            <div class="mb-3">JavaScript <div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated bg-info" data-skill="75%" style="width: 0%"></div></div></div>
+            <div class="mb-3">Bootstrap <div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" data-skill="85%" style="width: 0%"></div></div></div>
+          </section>
+
+          <section id="stack" class="mt-5 p-4">
+            <h4>Stack</h4>
+            <table class="table table-bordered">
+              <thead><tr><th>언어</th><th>숙련도</th></tr></thead>
+              <tbody>
+                <tr><td>HTML</td><td>상</td></tr>
+                <tr><td>CSS</td><td>상</td></tr>
+                <tr><td>JavaScript</td><td>중</td></tr>
+                <tr><td>Bootstrap</td><td>중</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="closing" class="mt-5 p-4">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">마무리</h4>
+                <p>읽어주셔서 감사합니다.</p>
+                <img src="close.jpg" class="img-fluid" style="width: 20rem; height: 10rem">
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="footer-home">
+  <div id="btn-home" style="display: inline-block; cursor: pointer;">
+    <i class="bi bi-house-door-fill"></i>
+    <span>Home</span>
+  </div>
+</div>
+    </div>
+  </div>
+
+  <script>
+  const btnMyPage = document.getElementById('btn-mypage');
+  const btnHome = document.getElementById('btn-home');
+  const mainUI = document.getElementById('main-ui');
+  const portfolio = document.getElementById('portfolio');
+
+  let isTransitioning = false;
+
+  btnMyPage.addEventListener('click', () => {
+    if (isTransitioning || portfolio.style.display === 'block') return;
+    isTransitioning = true;
+
+    mainUI.classList.add('slide-out-right');
+    mainUI.addEventListener('animationend', function handler() {
+      mainUI.removeEventListener('animationend', handler);
+      mainUI.style.display = 'none';
+      mainUI.classList.remove('slide-out-right');
+
+      portfolio.style.display = 'block';
+      portfolio.offsetHeight;
+      portfolio.classList.add('slide-in-left');
+      portfolio.addEventListener('animationend', function handler2() {
+        portfolio.removeEventListener('animationend', handler2);
+        portfolio.classList.remove('slide-in-left');
+        isTransitioning = false;
+      }, { once: true });
+    }, { once: true });
+  });
+
+  btnHome.addEventListener('click', () => {
+    if (isTransitioning || mainUI.style.display === 'flex') return;
+    isTransitioning = true;
+
+    portfolio.classList.add('slide-out-right');
+    portfolio.addEventListener('animationend', function handler() {
+      portfolio.removeEventListener('animationend', handler);
+      portfolio.style.display = 'none';
+      portfolio.classList.remove('slide-out-right');
+
+      mainUI.style.display = 'flex';
+      mainUI.offsetHeight;
+      mainUI.classList.add('slide-in-left');
+      mainUI.addEventListener('animationend', function handler2() {
+        mainUI.removeEventListener('animationend', handler2);
+        mainUI.classList.remove('slide-in-left');
+        isTransitioning = false;
+      }, { once: true });
+    }, { once: true });
+  });
+</script>
+
+  <!-- 프로그레스 바 동적 처리 -->
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target;
+          const skill = bar.getAttribute('data-skill');
+          bar.style.width = skill;
+          observer.unobserve(bar);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+      observer.observe(bar);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
